@@ -42,3 +42,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Other
+package-lock.json
+
+# Mock-server
+mock-server/dist
+mock-server/db.json

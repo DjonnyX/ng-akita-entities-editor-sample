@@ -1,0 +1,14 @@
+{
+    "/api/users": {
+      "target": "http://localhost:3000",
+      "secure": false
+    },
+    "/api/countries": {
+      "target": "http://localhost:3000",
+      "secure": false
+    },
+    "/api/user-countries": {
+      "target": "http://localhost:3000",
+      "secure": false
+    }
+}
