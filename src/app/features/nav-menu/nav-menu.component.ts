@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ViewChild, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, Input } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { MatSidenav } from '@angular/material';
 import { Router, NavigationEnd } from '@angular/router';

@@ -1,3 +1,7 @@
-<p>
-  users works!
-</p>
+<app-entity-table-editor
+[collection]="collection$ | async"
+[columns]="tableColumns"
+[localization]="localization"
+(add)="addUser($event)"
+(update)="editUser($event)"
+(delete)="deleteUser($event)"></app-entity-table-editor>

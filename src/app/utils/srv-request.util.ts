@@ -18,8 +18,9 @@ export interface IRequestParams<F> {
  * Создает параметры для запроса к json-server'у
  */
 export const createRequestParams = function<T>(options: IRequestParams<T>): IQueryParams {
-  
   const result = {};
+
+  if (!options) return result;
 
   // Добавление параметра сортировки
   if (options.sortBy) result["_sort"] = options.sortBy;
@@ -34,7 +35,7 @@ export const createRequestParams = function<T>(options: IRequestParams<T>): IQue
     if (options.slice.limit) result["_limit"] = options.slice.limit;
   }
 
-  return result
+  return result;
 }
 
 /**

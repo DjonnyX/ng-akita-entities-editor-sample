@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 export const ROUTE_COLLECTION = [{
   route: 'users',
-  name: 'пользователи'
+  name: 'Пользователи'
 }, {
   route: 'countries',
   name: 'Страны'

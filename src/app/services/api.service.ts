@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import IUser from '../models/user.model';
 import ICountry from '../models/country.model';
 import { createRequestParams, IRequestParams } from '../utils/srv-request.util';
+import IUserCountry from '../models/user-country.model';
 
 const HTTP_OPTIONS = {
   headers: new HttpHeaders({
@@ -58,30 +59,7 @@ export class ApiService {
    * Выполняет GET-запрос к json-server'у с параметрами фильтрации, сортировки, etc
    */
   protected get<T, F>(url: string, options: IRequestParams<F>) {
-    return this._http.get<Array<F>>(url, {
-      params: createRequestParams(options)
-    });
-  }
-
-  /**
-   * Выполняет POST-запрос к json-server'у
-   */
-  protected post<T, P>(url: string, body: P) {
-    return this._http.post<Array<P>>(url, body);
-  }
-
-  /**
-   * Выполняет PUT-запрос к json-server'у
-   */
-  protected put<T, P>(url: string, body: P) {
-    return this._http.put<Array<P>>(url, body);
-  }
-
-  /**
-   * Выполняет DELETE-запрос к json-server'у с параметрами фильтрации, сортировки, etc
-   */
-  protected delete<T, F>(url: string, options: IRequestParams<F>) {
-    return this._http.delete<Array<F>>(url, {
+    return this._http.get<T>(url, {
       params: createRequestParams(options)
     });
   }
@@ -89,92 +67,84 @@ export class ApiService {
   /**
    * Получение списка пользователей с заданными параметрами фильтрации
    */
-  getUsers(filter: IRequestParams<IUserFilterParams>) {
+  getUsers(filter?: IRequestParams<IUserFilterParams>) {
     return this.get<Array<IUser>, IUserFilterParams>(ApiRoutes.USERS, filter);
   }
 
   /**
    * Создание пользователя
    */
-  createUser(user: IUserFilterParams) {
-    return this.post<Array<IUser>, IUserFilterParams>(ApiRoutes.USERS, user);
+  createUser(user: IUser) {
+    return this._http.post<IUser>(ApiRoutes.USERS, user);
   }
 
   /**
    * Обновление пользователя
    */
-  updateUser(user: IUserFilterParams) {
-    return this._http.put<Array<IUser>>(ApiRoutes.USERS, user);
+  updateUser(user: IUser) {
+    return this._http.put<IUser>(`${ApiRoutes.USERS}/${user.id}`, user);
   }
 
   /**
    * Удаление пользователя
    */
-  deleteUser(filter: IUserFilterParams) {
-    return this._http.get<Array<IUser>>(ApiRoutes.USERS, {
-      params: filter as any
-    });
+  deleteUser(id: number) {
+    return this._http.delete<IUser>(`${ApiRoutes.USERS}/${id}`);
   }
 
   /**
    * Получение списка городов с заданными параметрами фильтрации
    */
-  getCountries(filter: IRequestParams<ICountryFilterParams>) {
-    return this.get<Array<ICountry>, ICountryFilterParams>(ApiRoutes.USERS, filter);
+  getCountries(filter?: IRequestParams<ICountryFilterParams>) {
+    return this.get<Array<ICountry>, ICountryFilterParams>(ApiRoutes.COUNTRIES, filter);
   }
 
   /**
    * Создание города
    */
-  createCountry(...countries: Array<ICountryFilterParams>) {
-    return this._http.post<Array<IUser>>(ApiRoutes.COUNTRIES, countries);
+  createCountry(country: ICountry) {
+    return this._http.post<ICountry>(ApiRoutes.COUNTRIES, country);
   }
 
   /**
    * Обновление города
    */
-  updateCountry(...countries: Array<ICountryFilterParams>) {
-    return this._http.put<Array<IUser>>(ApiRoutes.COUNTRIES, countries);
+  updateCountry(country: ICountry) {
+    return this._http.put<ICountry>(`${ApiRoutes.COUNTRIES}/${country.id}`, country);
   }
 
   /**
    * Удаление города
    */
-  deleteCountry(filter?: ICountryFilterParams) {
-    return this._http.get<Array<ICountry>>(ApiRoutes.COUNTRIES, {
-      params: filter as HttpParams
-    });
+  deleteCountry(id: number) {
+    return this._http.delete<ICountry>(`${ApiRoutes.COUNTRIES}/${id}`);
   }
 
   /**
    * Получение списка городов пользователя с заданными параметрами фильтрации
    */
-  getUserCountries(filter?: IUserCountryFilterParams) {
-    return this._http.get<Array<IUser>>(ApiRoutes.COUNTRIES, {
-      params: filter as HttpParams
-    });
+  getUserCountries(filter?: IRequestParams<IUserCountryFilterParams>) {
+    return this.get<Array<IUserCountry>, IUserFilterParams>(ApiRoutes.USER_COUNTRIES, filter);
   }
 
   /**
    * Создание города пользователя
    */
-  createUserCountry(...countries: Array<IUserCountryFilterParams>) {
-    return this._http.post<Array<IUser>>(ApiRoutes.COUNTRIES, countries);
+  createUserCountry(userCountry: IUserCountry) {
+    return this._http.post<IUserCountry>(ApiRoutes.USER_COUNTRIES, userCountry);
   }
 
   /**
    * Обновление города пользователя
    */
-  updateUserCountry(...countries: Array<IUserCountryFilterParams>) {
-    return this._http.put<Array<IUser>>(ApiRoutes.COUNTRIES, countries);
+  updateUserCountry(userCountry: IUserCountry) {
+    return this._http.put<IUserCountry>(`${ApiRoutes.USER_COUNTRIES}/${userCountry.id}`, userCountry);
   }
 
   /**
    * Удаление города пользователя
    */
-  deleteUserCountry(filter?: IUserCountryFilterParams) {
-    return this._http.get<Array<ICountry>>(ApiRoutes.COUNTRIES, {
-      params: filter as HttpParams
-    });
+  deleteUserCountry(id: number) {
+    return this._http.delete<IUserCountry>(`${ApiRoutes.USER_COUNTRIES}/${id}`);
   }
 }

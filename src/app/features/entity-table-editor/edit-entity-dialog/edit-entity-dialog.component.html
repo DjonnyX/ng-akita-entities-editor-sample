@@ -1,0 +1,12 @@
+<div mat-dialog-content>
+  <div *ngFor="let item of data.collection">
+    <p class="message">{{item.name}}</p>
+    <mat-form-field class="prop">
+      <input matInput [(ngModel)]="item.value">
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>{{data.buttonCancel}}</button>
+  <button mat-button [mat-dialog-close]="data.collection">{{data.buttonApply}}</button>
+</div>
