@@ -1,13 +1,3 @@
-<ul>
-  <li>
-    <h2><a [routerLink]="['/users']">Users</a></h2>
-  </li>
-  <li>
-    <h2><a [routerLink]="['/countries']">Countries</a></h2>
-  </li>
-  <li>
-    <h2><a [routerLink]="['/user-countries']">UserCountries</a></h2>
-  </li>
-</ul>
-
-<router-outlet></router-outlet>
+<app-nav-menu class="nav-menu" [routeCollection]="routeCollection">
+  <router-outlet></router-outlet>
+</app-nav-menu>

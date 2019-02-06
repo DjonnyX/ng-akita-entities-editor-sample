@@ -1,0 +1,13 @@
+.page-title {
+  flex: 1;
+  text-align: center;
+}
+
+.drawer-container {
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 100%;
+  overflow: auto;
+}
