@@ -3,7 +3,7 @@ import { MediaObserver } from '@angular/flex-layout';
 import { MatSidenav } from '@angular/material';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { filter, last, map, takeLast, tap } from 'rxjs/operators';
+import { filter, last, map, takeLast, tap, debounce, debounceTime } from 'rxjs/operators';
 import { NavMenuQuery } from './nav-menu.query';
 import { NavMenuService } from './nav-menu.service';
 
@@ -43,13 +43,19 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     this.roteCollection$ = this._navMenuQuery.roteCollection$;
 
     // Подписка на изменение медиа-состояния
-    this._media.media$.subscribe(mChange => {
+    this._media.media$.
+    pipe(tap())
+    .subscribe(mChange => {
       const isMobile = mChange.suffix === 'Xs' || mChange.suffix === 'Sm';
       this._navMenuService.setHasBackdrop(isMobile);
     })
 
     // Открывает/закрывает панель навигации
-    this._subscriptionSidenavStatus = this.sidenavOpen$.subscribe(val => {
+    this._subscriptionSidenavStatus = this.sidenavOpen$.
+    pipe(
+      debounceTime(100)
+    )
+    .subscribe(val => {
       if (val) return this._sidenav.open();
       this._sidenav.close();
     })
@@ -70,6 +76,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           this._navMenuService.setCurrentRoute(route);
         })
       );
+  }
+
+  drawerClose() {
+    this.closeSidenav();
   }
 
   closeSidenav() {

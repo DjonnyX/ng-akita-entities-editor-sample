@@ -20,6 +20,7 @@ export class NavMenuService {
    */
   setSideNavState(status: boolean) {
     this._navMenuStore.updateSideNavRequestedStatus(status);
+    this.checkSideNavStatus();
   }
 
   setRouteCollection(collection: Array<INavRoute>) {
