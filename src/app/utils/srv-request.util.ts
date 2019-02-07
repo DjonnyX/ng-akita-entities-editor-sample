@@ -15,7 +15,8 @@ export interface IRequestParams<F> {
     start: number;
     end: number;
     limit?: number;
-  }
+  },
+  search?: string;
 }
 
 /**
@@ -44,6 +45,8 @@ export const createRequestParams = function<T>(options: IRequestParams<T>): IQue
     result["_page"] = options.paging.page;
     if (options.paging.hasOwnProperty('limit')) result["_limit"] = options.paging.limit;
   }
+
+  if (options.hasOwnProperty('search')) result["q"] = options.search;
 
   return result;
 }

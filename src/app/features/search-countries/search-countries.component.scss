@@ -1,0 +1,21 @@
+@import '../../theme';
+
+.search-form {
+  width: 100%;
+  padding: 0 $m-offset $s-offset;
+  box-sizing: border-box;
+  background-color: $prim-substrate;
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .filter-group {
+    padding: $m-offset 0 0;
+  }
+
+  .filter-group.lt-md {
+      padding: 0;
+  }
+}

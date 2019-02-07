@@ -1,6 +1,8 @@
+@import '../../../theme';
+
 p.message {
     font-weight: 700;
-    font-size: 14px;
+    font-size: $m-fsize;
 }
 
 .prop {

@@ -1,4 +1,5 @@
-<app-entity-table-editor #table
+<app-entity-table-editor
+[totalItems]="totalLength$ | async"
 [collection]="collection$ | async"
 [columns]="tableColumns"
 [localization]="localization"

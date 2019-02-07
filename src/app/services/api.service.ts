@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import IUser from '../models/user.model';
-import ICountry from '../models/country.model';
+import IUser from '../states/users/users.model';
+import ICountry from '../states/countries/countries.model';
+import IUserCountry from '../states/user-countries/user-countries.model';
 import { createRequestParams, IRequestParams } from '../utils/srv-request.util';
-import IUserCountry from '../models/user-country.model';
 import { map } from 'rxjs/operators';
 
 const HTTP_OPTIONS = {

@@ -1,10 +1,8 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { UsersQuery } from './users.query';
-import { UsersService } from './users.service';
-import { Observable, Subscription } from 'rxjs';
-import IUser from 'src/app/models/user.model';
-import { PageEvent } from '@angular/material';
-import { EntityTableEditorComponent } from '../entity-table-editor/entity-table-editor.component';
+import { Component, OnInit } from '@angular/core';
+import { UsersQuery } from '../../states/users/users.query';
+import { UsersService } from '../../states/users/users.service';
+import { Observable } from 'rxjs';
+import IUser from '../../states/users/users.model';
 
 const TABLE_COLUMNS = [
   { id: 'id', name: 'id' },
@@ -37,9 +35,7 @@ const LOCALIZATION = {
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
-export class UsersComponent implements OnInit, OnDestroy {
-
-  @ViewChild('table') private _table: EntityTableEditorComponent;
+export class UsersComponent implements OnInit {
 
   localization = LOCALIZATION;
   tableColumns = TABLE_COLUMNS;
@@ -57,18 +53,12 @@ export class UsersComponent implements OnInit, OnDestroy {
    */
   loading$: Observable<boolean>;
 
-  private _subscrTotalLength: Subscription;
-
   constructor(private _usersQuery: UsersQuery, private _usersServices: UsersService) { }
 
   ngOnInit() {
     this.collection$ = this._usersQuery.selectAll();
     this.loading$ = this._usersQuery.selectLoading();
     this.totalLength$ = this._usersQuery.total$;
-
-    this._subscrTotalLength = this.totalLength$.subscribe(total => {
-      this._table.totalItems = total;
-    });
   }
 
   changePage(event) {
@@ -85,9 +75,5 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   deleteUser(id: number) {
     this._usersServices.deleteUser(id);
-  }
-
-  ngOnDestroy() {
-    this._subscrTotalLength.unsubscribe();
   }
 }

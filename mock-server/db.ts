@@ -1,6 +1,6 @@
-import IUser from '../src/app/models/user.model';
-import ICountries from '../src/app/models/country.model';
-import IUserCountry from '../src/app/models/user-country.model';
+import IUser from '../src/app/states/users/users.model';
+import ICountries from '../src/app/states/countries/countries.model';
+import IUserCountry from '../src/app/states/user-countries/user-countries.model';
 
 const TBL_USERS: Array<IUser> = [];
 const TBL_COUNTRIES: Array<ICountries> = [];

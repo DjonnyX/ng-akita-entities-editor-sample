@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import ICountry from 'src/app/models/country.model';
-import { CountriesQuery } from './countries.query';
-import { CountriesService } from './countries.service';
-import { EntityTableEditorComponent } from '../entity-table-editor/entity-table-editor.component';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import ICountry from '../../states/countries/countries.model';
+import { CountriesQuery } from '../../states/countries/countries.query';
+import { CountriesService } from '../../states/countries/countries.service';
 
 const TABLE_COLUMNS = [
   { id: 'id', name: 'id' },
@@ -36,9 +35,7 @@ const LOCALIZATION = {
   templateUrl: './countries.component.html',
   styleUrls: ['./countries.component.scss']
 })
-export class CountriesComponent implements OnInit, OnDestroy {
-
-  @ViewChild('table') private _table: EntityTableEditorComponent;
+export class CountriesComponent implements OnInit {
 
   localization = LOCALIZATION;
   tableColumns = TABLE_COLUMNS;
@@ -55,8 +52,6 @@ export class CountriesComponent implements OnInit, OnDestroy {
    * Состояние загрузки
    */
   loading$: Observable<boolean>;
-  
-  private _subscrTotalLength: Subscription;
 
   constructor(private _countriesQuery: CountriesQuery, private _countriesServices: CountriesService) { }
 
@@ -64,10 +59,6 @@ export class CountriesComponent implements OnInit, OnDestroy {
     this.collection$ = this._countriesQuery.selectAll();
     this.loading$ = this._countriesQuery.selectLoading();
     this.totalLength$ = this._countriesQuery.total$;
-
-    this._subscrTotalLength = this.totalLength$.subscribe(total => {
-      this._table.totalItems = total;
-    });
   }
 
   changePage(event) {
@@ -84,9 +75,5 @@ export class CountriesComponent implements OnInit, OnDestroy {
 
   deleteCountry(id: number) {
     this._countriesServices.deleteCountry(id);
-  }
-
-  ngOnDestroy() {
-    this._subscrTotalLength.unsubscribe();
   }
 }

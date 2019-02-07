@@ -1,0 +1,47 @@
+<form [formGroup]="formGroup" (ngSubmit)="search()" class="search-form mat-elevation-z2">
+  <div gdAreas="user country visited hasvisa" gdGap="16px" gdRows="auto" gdAreas.lt-lg="user country | visited hasvisa"
+    gdGap.lt-lg="8px 16px" gdRows.lt-lg="auto auto | auto auto" gdGap.lt-md="0px" gdAreas.lt-md="user | country | visited | hasvisa"
+    gdRows.lt-md="auto auto auto auto" class="filter-group">
+    <!-- Пользователь -->
+    <mat-form-field gdArea="user">
+      <input matInput placeholder="Пользователь" formControlName="ctrlUser" [matAutocomplete]="userAuto" required>
+      <mat-autocomplete #userAuto="matAutocomplete" [displayWith]="ctrlUserDisplayFn">
+        <mat-option *ngFor="let user of this.users$ | async" [value]="user">
+          {{ user.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- Страны -->
+    <mat-form-field gdArea="country">
+      <input matInput placeholder="Страны" formControlName="ctrlCountry" [matAutocomplete]="countryAuto">
+      <mat-autocomplete #countryAuto="matAutocomplete" [displayWith]="ctrlCountryDisplayFn">
+        <mat-option *ngFor="let country of this.countries$ | async" [value]="country">
+          {{ country.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- Посещенность -->
+    <mat-form-field gdArea="visited">
+      <mat-select placeholder="Посещенность" formControlName="ctrlVisited">
+        <mat-option *ngFor="let status of visitStatuses" [value]="status.value">
+          {{status.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Наличие визы -->
+    <mat-form-field gdArea="hasvisa">
+      <mat-select placeholder="Наличие визы" formControlName="ctrlHasVisa">
+        <mat-option *ngFor="let status of hasVisitStatuses" [value]="status.value">
+          {{status.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="footer">
+    <button mat-raised-button color="primary" (click)="search()">Показать</button>
+  </div>
+</form>

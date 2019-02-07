@@ -3,14 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { UserCountriesRoutingModule } from './user-countries-routing.module';
 import { UserCountriesComponent } from './user-countries.component';
-import { HttpClientModule } from '@angular/common/http';
+import { UsersService } from '../../states/users/users.service';
+import { ApiService } from 'src/app/services/api.service';
+import { SearchCountriesModule } from '../search-countries/search-countries.module';
 
 @NgModule({
   declarations: [UserCountriesComponent],
   imports: [
     CommonModule,
-    HttpClientModule,
+    SearchCountriesModule,
     UserCountriesRoutingModule
-  ]
+  ],
+  providers: [ApiService, UsersService]
 })
 export class UserCountriesModule { }

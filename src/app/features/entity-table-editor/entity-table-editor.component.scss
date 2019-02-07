@@ -1,12 +1,15 @@
+@import '../../theme';
+
 .container {
-  padding: 38px;
+  padding: $l-offset;
 
   .btn-add {
-    margin-bottom: 18px;
+    margin-bottom: $s-offset;
   }
 
   .mat-table {
     width: 100%;
+    background-color: $prim-substrate;
 
     td.mat-cell:last-of-type,
     td.mat-footer-cell:last-of-type,
@@ -38,7 +41,7 @@
     line-height: 32px;
 
     .mat-icon.s18 {
-      font-size: 18px;
+      font-size: $l-fsize;
     }
 
     .mat-icon.b800 {

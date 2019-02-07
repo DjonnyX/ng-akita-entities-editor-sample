@@ -1,6 +1,6 @@
-import { EntityState, StoreConfig, EntityStore, ID } from "@datorama/akita";
-import ICountry from '../../models/country.model';
+import { EntityState, StoreConfig, EntityStore } from "@datorama/akita";
 import { Injectable } from '@angular/core';
+import ICountry from './countries.model';
 
 export interface CountriesState extends EntityState<ICountry> {
     pageIndex: number;
