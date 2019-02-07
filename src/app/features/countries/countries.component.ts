@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import ICountry from 'src/app/models/country.model';
 import { CountriesQuery } from './countries.query';
 import { CountriesService } from './countries.service';
+import { EntityTableEditorComponent } from '../entity-table-editor/entity-table-editor.component';
 
 const TABLE_COLUMNS = [
   { id: 'id', name: 'id' },
@@ -35,38 +36,57 @@ const LOCALIZATION = {
   templateUrl: './countries.component.html',
   styleUrls: ['./countries.component.scss']
 })
-export class CountriesComponent implements OnInit {
+export class CountriesComponent implements OnInit, OnDestroy {
+
+  @ViewChild('table') private _table: EntityTableEditorComponent;
 
   localization = LOCALIZATION;
   tableColumns = TABLE_COLUMNS;
 
+  /**
+   * Общее количесво элементов в db
+   */
+  totalLength$: Observable<number>;
+  /**
+   * Коллекция в сторе
+   */
   collection$: Observable<Array<ICountry>>;
+  /**
+   * Состояние загрузки
+   */
   loading$: Observable<boolean>;
   
-  constructor(private _usersQuery: CountriesQuery, private _usersServices: CountriesService) { }
+  private _subscrTotalLength: Subscription;
+
+  constructor(private _countriesQuery: CountriesQuery, private _countriesServices: CountriesService) { }
 
   ngOnInit() {
-    this.collection$ = this._usersQuery.selectAll();
-    this.loading$ = this._usersQuery.selectLoading();
+    this.collection$ = this._countriesQuery.selectAll();
+    this.loading$ = this._countriesQuery.selectLoading();
+    this.totalLength$ = this._countriesQuery.total$;
 
-    this.getCollection();
+    this._subscrTotalLength = this.totalLength$.subscribe(total => {
+      this._table.totalItems = total;
+    });
   }
 
-  getCollection() {
-    if (this._usersQuery.isPristine) {
-      this._usersServices.getCountries();
-    }
+  changePage(event) {
+    this._countriesServices.updatePageParams(event.index, event.size);
   }
 
-  addCountry(user: ICountry) {
-    this._usersServices.addCountry(user);
+  addCountry(country: ICountry) {
+    this._countriesServices.addCountry(country);
   }
 
-  editCountry(user: ICountry) {
-    this._usersServices.editCountry(user);
+  editCountry(country: ICountry) {
+    this._countriesServices.editCountry(country);
   }
 
   deleteCountry(id: number) {
-    this._usersServices.deleteCountry(id);
+    this._countriesServices.deleteCountry(id);
+  }
+
+  ngOnDestroy() {
+    this._subscrTotalLength.unsubscribe();
   }
 }

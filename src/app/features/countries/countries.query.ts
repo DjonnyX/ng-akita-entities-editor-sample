@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class CountriesQuery extends QueryEntity<CountriesState, ICountry> {
 
-    collection$ = this.select(state => state.collection);
+    total$ = this.select<number>(state => state.total);
 
     constructor(protected store: CountriesStore) {
         super(store);

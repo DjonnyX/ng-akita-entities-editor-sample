@@ -1,7 +1,8 @@
-<app-entity-table-editor
+<app-entity-table-editor #table
 [collection]="collection$ | async"
 [columns]="tableColumns"
 [localization]="localization"
 (add)="addUser($event)"
 (update)="editUser($event)"
-(delete)="deleteUser($event)"></app-entity-table-editor>
+(delete)="deleteUser($event)"
+(changePage)="changePage($event)"></app-entity-table-editor>

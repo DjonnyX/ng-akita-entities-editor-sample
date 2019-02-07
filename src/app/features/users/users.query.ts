@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 })
 export class UsersQuery extends QueryEntity<UsersState, IUser> {
     
-    collection$ = this.select(state => state.collection);
+    total$ = this.select<number>(state => state.total);
 
     constructor(protected store: UsersStore) {
         super(store);

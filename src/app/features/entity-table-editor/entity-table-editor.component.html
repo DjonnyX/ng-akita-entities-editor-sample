@@ -3,6 +3,7 @@
     <mat-icon>add</mat-icon>
     {{localization.buttonAdd}}
   </button>
+  <div class="mat-elevation-z3">
   <table mat-table [dataSource]="collection">
 
     <ng-container *ngFor="let col of columns">
@@ -15,33 +16,36 @@
     <ng-container matColumnDef="service" stickyEnd>
       <th mat-header-cell *matHeaderCellDef></th>
       <td class="col-service" ngClass.xs="xs" ngClass.sm="sm" mat-cell *matCellDef="let element">
-        <ng-container *ngIf="isMobile">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-                <mat-icon class="b800 s18">more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="edit(element)">
-                  <mat-icon>edit</mat-icon>
-                  <span>{{localization.buttonEdit}}</span>
-                </button>
-                <button mat-menu-item (click)="delete(element)">
-                  <mat-icon>delete</mat-icon>
-                  <span>{{localization.buttonDelete}}</span>
-                </button>
-              </mat-menu>
-        </ng-container>
+        <!--<ng-container *ngIf="isMobile">-->
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon class="b800 s18">more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="edit(element)">
+              <mat-icon>edit</mat-icon>
+              <span>{{localization.buttonEdit}}</span>
+            </button>
+            <button mat-menu-item (click)="delete(element)">
+              <mat-icon>delete</mat-icon>
+              <span>{{localization.buttonDelete}}</span>
+            </button>
+          </mat-menu>
+        <!--</ng-container>
         <ng-container *ngIf="!isMobile;">
-            <button mat-icon-button (click)="edit(element)">
-              <mat-icon class="b500 s18">edit</mat-icon>
-            </button>
-            <button mat-icon-button (click)="delete(element)">
-              <mat-icon class="b500 s18">delete</mat-icon>
-            </button>
-        </ng-container>
+          <button mat-icon-button (click)="edit(element)">
+            <mat-icon class="b500 s18">edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="delete(element)">
+            <mat-icon class="b500 s18">delete</mat-icon>
+          </button>
+        </ng-container>-->
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columnIds"></tr>
     <tr mat-row *matRowDef="let row; columns: columnIds;"></tr>
   </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons [length]="totalItems" (page)="changePage($event)"></mat-paginator>
+</div>
 </div>

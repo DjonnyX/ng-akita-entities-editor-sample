@@ -7,6 +7,10 @@ export interface IRequestParams<F> {
   sortBy?: string;
   order?: 'DESC'|'ASC';
   filter?: Array<F>;
+  paging?: {
+    page: number;
+    limit?: number;
+  }
   slice?: {
     start: number;
     end: number;
@@ -29,10 +33,16 @@ export const createRequestParams = function<T>(options: IRequestParams<T>): IQue
   if (options.filter) appendFilterParams(result, options.filter);
   
   // Добавление параметров выборки секвенции
-  if (options.slice && options.slice.start && options.slice.end) {
+  if (options.slice && options.slice.hasOwnProperty('start') && options.slice.hasOwnProperty('end')) {
     result["_start"] = options.slice.start;
     result["_end"] = options.slice.end;
-    if (options.slice.limit) result["_limit"] = options.slice.limit;
+    if (options.slice.hasOwnProperty('limit')) result["_limit"] = options.slice.limit;
+  }
+
+  // Добавление параметров пагинации
+  if (options.paging && options.paging.hasOwnProperty('page')) {
+    result["_page"] = options.paging.page;
+    if (options.paging.hasOwnProperty('limit')) result["_limit"] = options.paging.limit;
   }
 
   return result;

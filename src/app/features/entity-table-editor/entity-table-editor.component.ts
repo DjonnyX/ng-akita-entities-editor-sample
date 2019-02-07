@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { MatDialog, PageEvent } from '@angular/material';
 import { EditEntityDialogComponent, IEditEntityDialogData } from './edit-entity-dialog/edit-entity-dialog.component';
 import { MediaObserver } from '@angular/flex-layout';
 import { IDeleteEntityDialogData, DeleteEntityDialogComponent } from './delete-entity-dialog/delete-entity-dialog.component';
@@ -19,12 +19,13 @@ enum ColumnTypes {
   templateUrl: './entity-table-editor.component.html',
   styleUrls: ['./entity-table-editor.component.scss']
 })
-export class EntityTableEditorComponent {
+export class EntityTableEditorComponent implements OnInit {
 
   private _columns: Array<IColumn>;
   private _columnIds: Array<string>;
   private _workingPropsSet: any;
 
+  @Input() totalItems: number;
   @Input() localization: any;
   @Input() collection: Array<any>;
   @Input() set columns(v: Array<IColumn>) {
@@ -33,10 +34,17 @@ export class EntityTableEditorComponent {
   };
 
   @Output('add') private _emrAdd = new EventEmitter<any>();
+  @Output('changePage') private _emrChangePage = new EventEmitter<{index: number, size: number}>();
   @Output('update') private _emrUpdate = new EventEmitter<any>();
   @Output('delete') private _emrDelete = new EventEmitter<number>();
 
   constructor(private _dialog: MatDialog, private _media: MediaObserver) { }
+
+  ngOnInit() {
+    this.changePage({
+      pageIndex: 0,
+      pageSize: 5});
+  }
 
   /**
    * Переопределение вспомогательных объектов
@@ -113,6 +121,10 @@ export class EntityTableEditorComponent {
       if (!result) return; // отмена
       this._emrDelete.emit(value.id);
     });
+  }
+
+  changePage(event) {
+    this._emrChangePage.emit({index: event.pageIndex, size: event.pageSize});
   }
 
   /**

@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" class="mat-elevation-z4">
   <div *ngIf="sidenavHasBackdrop$ | async" fxHide.gt-sm>
     <button mat-icon-button (click)="toggleSidenav()">
       <mat-icon>menu</mat-icon>
@@ -7,7 +7,7 @@
   <p class="page-title">{{currentRouteName$ | async}}</p>
 </mat-toolbar>
 <mat-sidenav-container #sidenavContainer [hasBackdrop]="sidenavHasBackdrop$ | async" class="drawer-container">
-  <mat-sidenav #sidenav role="navigation" [ngClass]="(sidenavHasBackdrop$ | async) ? 'backdrop' : ''" [mode]="(sidenavHasBackdrop$ | async) ? 'push' : 'side'">
+  <mat-sidenav #sidenav class="mat-elevation-z2" role="navigation" [ngClass]="(sidenavHasBackdrop$ | async) ? 'backdrop' : ''" [mode]="(sidenavHasBackdrop$ | async) ? 'push' : 'side'">
     <mat-nav-list role="listitem">
       <a *ngFor="let item of (roteCollection$ | async)" mat-list-item type="button" [routerLink]="'/' + item.route">
         <span class="label">{{item.name}}</span>

@@ -4,6 +4,7 @@ import IUser from '../models/user.model';
 import ICountry from '../models/country.model';
 import { createRequestParams, IRequestParams } from '../utils/srv-request.util';
 import IUserCountry from '../models/user-country.model';
+import { map } from 'rxjs/operators';
 
 const HTTP_OPTIONS = {
   headers: new HttpHeaders({
@@ -59,9 +60,17 @@ export class ApiService {
    * Выполняет GET-запрос к json-server'у с параметрами фильтрации, сортировки, etc
    */
   protected get<T, F>(url: string, options: IRequestParams<F>) {
+    const opt = createRequestParams(options);
     return this._http.get<T>(url, {
-      params: createRequestParams(options)
-    });
+      params: opt,
+      observe: 'response'
+    }).pipe(
+      map(res => ({
+          total: Number(res.headers.get('X-Total-Count')),
+          items: res.body
+        })
+      )
+    )
   }
 
   /**

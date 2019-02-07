@@ -1,7 +1,8 @@
-<app-entity-table-editor
+<app-entity-table-editor #table
 [collection]="collection$ | async"
 [columns]="tableColumns"
 [localization]="localization"
 (add)="addCountry($event)"
 (update)="editCountry($event)"
-(delete)="deleteCountry($event)"></app-entity-table-editor>
+(delete)="deleteCountry($event)"
+(changePage)="changePage($event)"></app-entity-table-editor>

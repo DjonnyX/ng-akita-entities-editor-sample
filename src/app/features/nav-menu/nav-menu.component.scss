@@ -1,5 +1,4 @@
 $paddingH: 14px;
-$dropShadow: 0 2px 4px -1px rgba(0, 0, 0, 0.18), 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 1px 14px 0 rgba(0, 0, 0, 0.08);
 
 .page-title {
   flex: 1;
@@ -16,7 +15,6 @@ $dropShadow: 0 2px 4px -1px rgba(0, 0, 0, 0.18), 0 6px 10px 0 rgba(0, 0, 0, 0.1)
 }
 
 .mat-toolbar {
-  box-shadow: $dropShadow;
   z-index: 2;
 }
 
@@ -26,4 +24,9 @@ $dropShadow: 0 2px 4px -1px rgba(0, 0, 0, 0.18), 0 6px 10px 0 rgba(0, 0, 0, 0.1)
 
 .mat-drawer {
   background-color: #f1f1f1;
+}
+
+.mat-list-item .label {
+  font-size: 14px;
+  font-weight: 500;
 }
