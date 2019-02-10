@@ -1,8 +1,6 @@
 <app-search-countries (search)="search($event)"></app-search-countries>
 
-<app-entity-table-editor
-[totalItems]="totalLength$ | async"
-[collection]="collection$ | async"
-[columns]="tableColumns"
-[localization]="localization"
-(changePage)="changePage($event)">></app-entity-table-editor>
+<ng-container *ngIf="fetchedCollection$ | async">
+  <app-entity-table-editor [totalItems]="totalLength$ | async" [collection]="collection$ | async" [columns]="tableColumns"
+    [localization]="localization"></app-entity-table-editor>
+</ng-container>

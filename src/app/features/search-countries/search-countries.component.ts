@@ -91,8 +91,8 @@ export class SearchCountriesComponent implements OnInit {
   private createFormControls() {
     this.ctrlUser = new FormControl('', [Validators.required], UserValidator.create(this._searchCountriesService));
     this.ctrlCountry = new FormControl('', null, CountryValidator.create(this._searchCountriesService));
-    this.ctrlVisited = new FormControl('');
-    this.ctrlHasVisa = new FormControl('');
+    this.ctrlVisited = new FormControl(-1);
+    this.ctrlHasVisa = new FormControl(-1);
 
     this.formGroup = this._formBuilder.group({
       ctrlUser: this.ctrlUser,

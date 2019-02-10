@@ -22,28 +22,34 @@ export class UsersService {
 
   addUser(user: IUser) {
     return this._apiService.createUser(user)
-      .subscribe(newUser =>
-        this.updateUsers()
-      )
+      .subscribe(addedUser => {
+        this._usersStore.updateTotalLength(this._usersQuery.getValue().total + 1);
+        this._usersStore.add(addedUser);
+      })
   }
 
   editUser(user: IUser) {
     return this._apiService.updateUser(user)
-      .subscribe(updatedUser => 
-        this.updateUsers()
+      .subscribe(updatedUser =>
+        this._usersStore.update(user.id, updatedUser)
       )
   }
 
   deleteUser(id: number) {
     return this._apiService.deleteUser(id)
-      .subscribe(deletedUser => 
-        this.updateUsers()
-      )
+      .subscribe(_ => {
+        this._usersStore.updateTotalLength(this._usersQuery.getValue().total - 1);
+        this._usersStore.remove(id);
+      })
   }
 
   updatePageParams(index: number, size: number) {
     this._usersStore.updatePageParams(index, size);
     this.updateUsers()
+  }
+
+  reset() {
+    this._usersStore.reset();
   }
 
   private updateUsers() {

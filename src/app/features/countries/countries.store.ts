@@ -15,7 +15,7 @@ const initialState: CountriesState = {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'countries' })
+@StoreConfig({ name: 'countries', resettable: true })
 export class CountriesStore extends EntityStore<CountriesState, ICountry> {
 
     constructor() {

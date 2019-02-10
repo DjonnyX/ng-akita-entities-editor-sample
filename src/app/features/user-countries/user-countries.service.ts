@@ -59,11 +59,16 @@ export class UserCountriesService {
       ).subscribe(([c, uc]) => {
         const collection = normalize(c as ICountry[], uc as IUserCountry[]);
         this._store.set(collection);
+        this._store.updateFetchedCollection(true);
       })
   }
 
   updatePageParams(index: number, size: number) {
     this._store.updatePageParams(index, size);
+  }
+
+  reset() {
+    this._store.reset();
   }
 }
 

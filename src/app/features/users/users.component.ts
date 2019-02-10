@@ -77,5 +77,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this._usersServices.deleteUser(id);
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this._usersServices.reset();
+  }
 }

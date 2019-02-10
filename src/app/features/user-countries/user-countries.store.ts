@@ -7,17 +7,19 @@ export interface UserCountriesState extends EntityState<IUserCountry> {
     pageSize: number;
     total: number;
     hasUser: boolean;
+    fetchedCollection: boolean;
 }
 
 const initialState: UserCountriesState = {
     pageIndex: 0,
     pageSize: 0,
     total: 0,
+    fetchedCollection: false,
     hasUser: false
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'user_countries' })
+@StoreConfig({ name: 'user_countries', resettable: true })
 export class UserCountriesStore extends EntityStore<UserCountriesState, IUserCountry> {
 
     constructor() {
@@ -34,5 +36,9 @@ export class UserCountriesStore extends EntityStore<UserCountriesState, IUserCou
 
     updateHasUser(status: boolean) {
         this.updateRoot({hasUser: status});
+    }
+
+    updateFetchedCollection(status: boolean) {
+        this.updateRoot({fetchedCollection: status});
     }
 }

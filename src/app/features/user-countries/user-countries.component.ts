@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import IUserCountry from '../../models/user-country.model';
 import { UserCountriesQuery } from './user-countries.query';
@@ -15,7 +15,7 @@ const TABLE_COLUMNS = [
   templateUrl: './user-countries.component.html',
   styleUrls: ['./user-countries.component.scss']
 })
-export class UserCountriesComponent implements OnInit {
+export class UserCountriesComponent implements OnInit, OnDestroy {
 
   tableColumns = TABLE_COLUMNS;
   /**
@@ -27,18 +27,21 @@ export class UserCountriesComponent implements OnInit {
    */
   loading$: Observable<boolean>;
 
+  fetchedCollection$: Observable<boolean>;
+
   constructor(private _userCountriesQuery: UserCountriesQuery, private _userCountriesService: UserCountriesService) { }
 
   ngOnInit() {
+    this.fetchedCollection$ = this._userCountriesQuery.fetchedCollection$;
     this.collection$ = this._userCountriesQuery.selectAll();
     this.loading$ = this._userCountriesQuery.selectLoading();
   }
 
-  changePage(event) {
-    this._userCountriesService.updatePageParams(event.index, event.size);
-  }
-
   search(data: ISearchData) {
     this._userCountriesService.getUserCountries(data);
+  }
+
+  ngOnDestroy() {
+    this._userCountriesService.reset();
   }
 }
