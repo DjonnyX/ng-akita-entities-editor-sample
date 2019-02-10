@@ -1,22 +1,22 @@
 import { EntityState, StoreConfig, EntityStore } from "@datorama/akita";
 import { Injectable } from '@angular/core';
-import ICountry from './countries.model';
+import IUser from '../../models/user.model';
 
-export interface CountriesState extends EntityState<ICountry> {
+export interface UsersState extends EntityState<IUser> {
     pageIndex: number;
     pageSize: number;
     total: number;
 }
 
-const initialState: CountriesState = {
+const initialState: UsersState = {
     pageIndex: 0,
     pageSize: 0,
     total: 0
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'countries' })
-export class CountriesStore extends EntityStore<CountriesState, ICountry> {
+@StoreConfig({ name: 'users' })
+export class UsersStore extends EntityStore<UsersState, IUser> {
 
     constructor() {
         super(initialState);

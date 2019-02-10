@@ -1,7 +1,7 @@
 import { QueryEntity } from '@datorama/akita';
 import { UsersState, UsersStore } from './users.store';
 import { Injectable } from '@angular/core';
-import IUser from './users.model';
+import IUser from '../../models/user.model';
 
 @Injectable({
     providedIn: 'root'

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from 'src/app/services/api.service';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { ApiService } from '../../services/api.service';
 
 @Injectable({
   providedIn: 'root'

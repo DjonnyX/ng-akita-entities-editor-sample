@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import IUser from '../states/users/users.model';
-import ICountry from '../states/countries/countries.model';
-import IUserCountry from '../states/user-countries/user-countries.model';
-import { createRequestParams, IRequestParams } from '../utils/srv-request.util';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import IUser from '../models/user.model';
+import ICountry from '../models/country.model';
+import IUserCountry from '../models/user-country.model';
+import { createRequestParams, IRequestParams } from '../utils/srv-request.util';
 
 const HTTP_OPTIONS = {
   headers: new HttpHeaders({
@@ -18,7 +18,7 @@ const API_URL = '/api/';
 enum ApiRouteNames {
   USERS = 'users',
   COUNTRIES = 'countries',
-  USER_COUNTRIES = 'user_countries'
+  USER_COUNTRIES = 'usercountries'
 }
 
 export class ApiRoutes {

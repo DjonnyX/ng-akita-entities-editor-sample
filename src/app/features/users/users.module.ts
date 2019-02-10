@@ -5,7 +5,7 @@ import { UsersRoutingModule } from './users-routing.module';
 import { UsersComponent } from './users.component';
 import { ApiService } from 'src/app/services/api.service';
 import { EntityTableEditorModule } from '../entity-table-editor/entity-table-editor.module';
-import { UsersService } from '../../states/users/users.service';
+import { UsersService } from './users.service';
 
 @NgModule({
   declarations: [UsersComponent],

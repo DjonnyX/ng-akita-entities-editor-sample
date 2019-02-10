@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { CountriesStore } from './countries.store';
-import ICountry from './countries.model';
+import ICountry from '../../models/country.model';
 import { CountriesQuery } from './countries.query';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

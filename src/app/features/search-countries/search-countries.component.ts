@@ -1,10 +1,11 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { startWith, debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { startWith, debounceTime, distinctUntilChanged, map, switchMap, filter } from 'rxjs/operators';
 import { SearchCountriesService } from './search-countries.service';
-import IUser from '../../states/users/users.model';
-import ICountry from '../../states/countries/countries.model';
+import IUser from '../../models/user.model';
+import ICountry from '../../models/country.model';
+import { ISearchData } from '../user-countries/user-countries.service';
 
 /**
  * Максимальное кол-во элементов в autocomplete'е
@@ -17,20 +18,13 @@ const VISIT_STATUSES = [
   { value: -1, name: "Любое" },
   { value: 0, name: "Не посещена" },
   { value: 1, name: "Посещена" }
-]
+];
 
 const HAS_VISA_STATUSES = [
   { value: -1, name: "Любое" },
   { value: 0, name: "Нет визы" },
   { value: 1, name: "Есть виза" }
-]
-
-interface ISearchData {
-  userId: number;
-  countryId: number;
-  visited: number;
-  hasVisa: number;
-}
+];
 
 /**
  * Валидатор пользователя
@@ -42,7 +36,7 @@ class UserValidator {
       return of(control.value.id)
         .pipe(
           switchMap(id => service.hasUser(id)),
-          map(isExists => isExists ? null : { error: 'Такой страны не существует' })
+          map(isExists => isExists ? null : { error: 'Такого пользователя не существует' })
         );
     };
   }
@@ -55,8 +49,9 @@ class UserValidator {
 class CountryValidator {
   static create(service: SearchCountriesService) {
     return (control: AbstractControl) => {
-      return of(control.value.id)
+      return of(control.value)
         .pipe(
+          filter(data => data.id),
           switchMap(id => service.hasCountry(id)),
           map(isExists => isExists ? null : { error: 'Такой страны не существует' })
         );
@@ -145,6 +140,11 @@ export class SearchCountriesComponent implements OnInit {
   }
 
   search() {
-
+    this._emtrSearch.emit({
+      user: this.ctrlUser.value,
+      country: this.ctrlCountry.value,
+      visited: this.ctrlVisited.value,
+      hasVisa: this.ctrlHasVisa.value
+    });
   }
 }

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { MatDialog, PageEvent } from '@angular/material';
-import { EditEntityDialogComponent, IEditEntityDialogData } from './edit-entity-dialog/edit-entity-dialog.component';
+import { MatDialog } from '@angular/material';
 import { MediaObserver } from '@angular/flex-layout';
+import { EditEntityDialogComponent, IEditEntityDialogData } from './edit-entity-dialog/edit-entity-dialog.component';
 import { IDeleteEntityDialogData, DeleteEntityDialogComponent } from './delete-entity-dialog/delete-entity-dialog.component';
 
 interface IColumn {
@@ -11,7 +11,7 @@ interface IColumn {
 
 enum ColumnTypes {
   ID = 'id',
-  SERVICE = 'service'
+  SERVICE = 'service',
 }
 
 @Component({
@@ -24,6 +24,8 @@ export class EntityTableEditorComponent implements OnInit {
   private _columns: Array<IColumn>;
   private _columnIds: Array<string>;
   private _workingPropsSet: any;
+
+  @Input() creatable: boolean;
 
   @Input() totalItems: number;
   @Input() localization: any;

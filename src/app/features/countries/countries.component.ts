@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import ICountry from '../../states/countries/countries.model';
-import { CountriesQuery } from '../../states/countries/countries.query';
-import { CountriesService } from '../../states/countries/countries.service';
+import ICountry from '../../models/country.model';
+import { CountriesQuery } from './countries.query';
+import { CountriesService } from './countries.service';
 
 const TABLE_COLUMNS = [
-  { id: 'id', name: 'id' },
+  // { id: 'id', name: 'id' },
   { id: 'name', name: 'Имя' },
   { id: 'service' }
 ];

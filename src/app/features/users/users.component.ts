@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { UsersQuery } from '../../states/users/users.query';
-import { UsersService } from '../../states/users/users.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import IUser from '../../states/users/users.model';
+import { UsersQuery } from './users.query';
+import { UsersService } from './users.service';
+import IUser from '../../models/user.model';
 
 const TABLE_COLUMNS = [
-  { id: 'id', name: 'id' },
+  // { id: 'id', name: 'id' },
   { id: 'name', name: 'Имя' },
   { id: 'service' }
 ];
@@ -35,7 +35,7 @@ const LOCALIZATION = {
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
 
   localization = LOCALIZATION;
   tableColumns = TABLE_COLUMNS;
@@ -76,4 +76,6 @@ export class UsersComponent implements OnInit {
   deleteUser(id: number) {
     this._usersServices.deleteUser(id);
   }
+
+  ngOnDestroy() {}
 }

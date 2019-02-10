@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { UsersStore } from './users.store';
 import { UsersQuery } from './users.query';
 import { ApiService } from 'src/app/services/api.service';
-import IUser from './users.model';
-import { switchMap, map } from 'rxjs/operators';
+import IUser from '../../models/user.model';
 
 @Injectable({
   providedIn: 'root'
