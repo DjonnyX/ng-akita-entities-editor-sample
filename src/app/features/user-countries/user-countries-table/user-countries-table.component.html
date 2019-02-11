@@ -1,16 +1,9 @@
 <div class="container">
   <div class="mat-elevation-z2">
-    <table mat-table matSort>
+    <table mat-table matSort (matSortChange)="updateData()">
       <ng-container *ngFor="let col of columns" [matColumnDef]="col.id">
-        <!-- С сортировкой -->
-        <ng-container *ngIf="col.type !== 'switch'; else thWithoutSorting">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{col.name}}</th>
-        </ng-container>
-        <!-- Без сортировок -->
-        <ng-template #thWithoutSorting>
-          <th mat-header-cell *matHeaderCellDef>{{col.name}}</th>
-        </ng-template>
 
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{col.name}}</th>
         <td mat-cell *matCellDef="let element">
           <ng-container *ngIf="col.type === 'switch'; else textContent">
             <mat-slide-toggle [checked]="element[col.id]" (change)="changeEntityPropValue($event, element, col.id)"></mat-slide-toggle>

@@ -64,7 +64,7 @@ export class UserCountriesService {
               map(e => createEntityFrom(e, false)),
               switchMap(e => this.createUserCountry(e)),
               map(e => {
-                this._store.add({ ...uc, ...e })
+                this._store.add({ ...uc, ...e, ...{visited: e.visited, hasVisa: e.hasVisa} })
                 this._store.remove(uc.id);
               })
             ),
@@ -72,7 +72,7 @@ export class UserCountriesService {
             of(uc).pipe(
               map(e => createEntityFrom(e)),
               switchMap(e => this.updateUserCountry(e)),
-              map(e => this._store.update(uc.id, { ...uc, e }))
+              map(e => this._store.update(uc.id, { ...uc, e, ...{visited: e.visited, hasVisa: e.hasVisa} }))
             )
           )
       )

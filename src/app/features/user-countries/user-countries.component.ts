@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import IUserCountry, { IEditableUserCountry } from '../../models/user-country.model';
 import { UserCountriesQuery } from './user-countries.query';
@@ -18,8 +18,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 20];
 @Component({
   selector: 'app-user-countries',
   templateUrl: './user-countries.component.html',
-  styleUrls: ['./user-countries.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./user-countries.component.scss']
 })
 export class UserCountriesComponent implements OnInit, OnDestroy {
 
