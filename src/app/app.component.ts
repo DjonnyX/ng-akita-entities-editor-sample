@@ -12,7 +12,7 @@ export class AppComponent {
 
   routeCollection = Array.from(ROUTE_COLLECTION);
 
-  constructor(private _ngZone: NgZone) {
+  constructor(_ngZone: NgZone) {
     if (!environment.production) {
       akitaDevtools(_ngZone);
     }

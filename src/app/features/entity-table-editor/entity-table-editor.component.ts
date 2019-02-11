@@ -1,43 +1,54 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { MediaObserver } from '@angular/flex-layout';
 import { EditEntityDialogComponent, IEditEntityDialogData } from './edit-entity-dialog/edit-entity-dialog.component';
 import { IDeleteEntityDialogData, DeleteEntityDialogComponent } from './delete-entity-dialog/delete-entity-dialog.component';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-interface IColumn {
-  id: string,
-  name: string
-}
-
-enum ColumnTypes {
-  ID = 'id',
-  SERVICE = 'service',
+export interface IColumnData {
+  id: string;
+  name?: string;
+  isService?: boolean;
 }
 
 @Component({
   selector: 'app-entity-table-editor',
   templateUrl: './entity-table-editor.component.html',
-  styleUrls: ['./entity-table-editor.component.scss']
+  styleUrls: ['./entity-table-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntityTableEditorComponent implements OnInit {
 
-  private _columns: Array<IColumn>;
+  private _columns: Array<IColumnData>;
+
   private _columnIds: Array<string>;
+  
   private _workingPropsSet: any;
 
-  @Input() creatable: boolean;
+  isMobile$: Observable<boolean>;
 
+  @Input() creatable: boolean;
+  
+  @Input() pageSizeOptions: Array<number>;
+  
   @Input() totalItems: number;
+  
   @Input() localization: any;
+  
   @Input() collection: Array<any>;
-  @Input() set columns(v: Array<IColumn>) {
+
+  @Input() set columns(v: Array<IColumnData>) {
     this._columns = v;
     this.resetHelperData(v);
   };
 
   @Output('add') private _emrAdd = new EventEmitter<any>();
-  @Output('changePage') private _emrChangePage = new EventEmitter<{index: number, size: number}>();
+
+  @Output('changePage') private _emrChangePage = new EventEmitter<{ index: number, size: number }>();
+  
   @Output('update') private _emrUpdate = new EventEmitter<any>();
+  
   @Output('delete') private _emrDelete = new EventEmitter<number>();
 
   constructor(private _dialog: MatDialog, private _media: MediaObserver) { }
@@ -45,7 +56,12 @@ export class EntityTableEditorComponent implements OnInit {
   ngOnInit() {
     this.changePage({
       pageIndex: 0,
-      pageSize: 5});
+      pageSize: this.pageSizeOptions[0]
+    });
+    
+    this.isMobile$ = this._media.media$.pipe(
+      map(v => v.suffix === 'Xs' || v.suffix === 'Sm')
+    );
   }
 
   /**
@@ -53,13 +69,13 @@ export class EntityTableEditorComponent implements OnInit {
    * - Переопределяет рабочий набор свойств (те которые можно редактировать)
    * - Переопределяет массив идентификаторов колонок
    */
-  private resetHelperData(columns: Array<IColumn>) {
+  private resetHelperData(columns: Array<IColumnData>) {
     this._columnIds = columns ? columns.map(v => v.id) : [];
 
     const workingPropsSet = {};
     columns.forEach(c => {
       // Если идентификатор колонки не равен ID и SERVICE, то свойство попадает в рабочий набор
-      if (c.id !== ColumnTypes.ID && c.id !== ColumnTypes.SERVICE) workingPropsSet[c.id] = '';
+      if (!c.isService) workingPropsSet[c.id] = '';
     });
     this._workingPropsSet = workingPropsSet;
   }
@@ -68,14 +84,14 @@ export class EntityTableEditorComponent implements OnInit {
    * Добавляет новую сущность
    */
   add(): void {
-    const v = normalizeProps(this._workingPropsSet, this._columns);
+    const v = normalizeProps(this._workingPropsSet, this._columns, this._workingPropsSet);
     const data: IEditEntityDialogData = {
       buttonApply: this.localization.addDialog.buttonApply,
       buttonCancel: this.localization.addDialog.buttonCancel,
       collection: v
     }
     const dialogRef = this._dialog.open(EditEntityDialogComponent, {
-      width: '350px',
+      width: DIALOG_WIDTH,
       data: data
     });
 
@@ -89,14 +105,14 @@ export class EntityTableEditorComponent implements OnInit {
    * Редактирует запрошенную сущность
    */
   edit(value: any): void {
-    const v = normalizeProps(value, this._columns);
+    const v = normalizeProps(value, this._columns, this._workingPropsSet);
     const data: IEditEntityDialogData = {
       buttonApply: this.localization.editDialog.buttonApply,
       buttonCancel: this.localization.editDialog.buttonCancel,
       collection: v
     }
     const dialogRef = this._dialog.open(EditEntityDialogComponent, {
-      width: '350px',
+      width: DIALOG_WIDTH,
       data: data
     });
 
@@ -112,10 +128,10 @@ export class EntityTableEditorComponent implements OnInit {
   delete(value: any): void {
     const data: IDeleteEntityDialogData = {
       ...this.localization.delDialog,
-      ...{message: this.localization.delDialog.message.replace('$1', value.name)}
+      ...{ message: this.localization.delDialog.message.replace('$1', value.name) }
     }
     const dialogRef = this._dialog.open(DeleteEntityDialogComponent, {
-      width: '350px',
+      width: DIALOG_WIDTH,
       data: data
     });
 
@@ -126,29 +142,28 @@ export class EntityTableEditorComponent implements OnInit {
   }
 
   changePage(event) {
-    this._emrChangePage.emit({index: event.pageIndex, size: event.pageSize});
+    this._emrChangePage.emit({ index: event.pageIndex, size: event.pageSize });
   }
 
   /**
    * Набор "рабочих" свойств
    */
-  get columns(): Array<IColumn> { return this._columns; }
+  get columns(): Array<IColumnData> { return this._columns; }
 
   /**
    * Массив идентификаторов колонок
    */
   get columnIds(): Array<string> { return this._columnIds; }
-
-  get isMobile() { return this._media.isActive('xs') || this._media.isActive('sm')}
 }
 
 /**
  * Преобразует map в массив редактируемых свойств, где name - имя свойства и value - его значение
  */
-const normalizeProps = (props: any, columns: Array<IColumn>): Array<{ id: string, value: string, name: string }> => {
-  return mapToArrayWorkingProps(props).map(prop => {
+const normalizeProps = (props: any, columns: Array<IColumnData>, refProps?: any): Array<any> => {
+  return mapToArrayWorkingProps(props, refProps).map(prop => {
+    const c = columns.find(column => column.id === prop.id);
     return {
-      ...prop, ...{ name: columns.find(column => column.id === prop.id).name }
+      ...c, ...prop
     }
   });
 }
@@ -156,11 +171,11 @@ const normalizeProps = (props: any, columns: Array<IColumn>): Array<{ id: string
 /**
  * Преобразует map в массив редактируемых свойств, где name - имя свойства и value - его значение
  */
-const mapToArrayWorkingProps = (val: any): Array<{ id: string, value: string }> => {
+const mapToArrayWorkingProps = (val: any, refProps?: any): Array<{ id: string, value: string }> => {
   const result = [];
-  const keys = Object.keys(val);
+  const keys = Object.keys(refProps ? refProps : val);
   keys.forEach(key => {
-    if (key !== ColumnTypes.ID && key !== ColumnTypes.SERVICE) result.push({ id: key, value: val[key] });
+    if (key) result.push({ id: key, value: val[key] });
   });
   return result;
 }
@@ -173,3 +188,5 @@ const propsArrayToMap = (id: number, val: Array<{ id: string, value: string }>) 
   if (id) result['id'] = id;
   return result;
 }
+
+const DIALOG_WIDTH = '350px';

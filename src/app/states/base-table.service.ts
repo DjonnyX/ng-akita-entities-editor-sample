@@ -20,25 +20,27 @@ export class BaseTableService<S extends BaseTableStore<any, any> = any, Q extend
             })
     }
 
-    addEntity(user: E) {
-        return this.addEntitiesFn(user)
-            .subscribe(newUser =>
-                this.updateUsers()
-            )
+    addEntity(entity: E) {
+        return this.addEntitiesFn(entity)
+            .subscribe(newEntity => {
+                this._store.updateTotalLength(this._query.getValue().total + 1);
+                this._store.add(newEntity);
+            })
     }
 
-    editEntity(user: E) {
-        return this.editEntitiesFn(user)
-            .subscribe(updatedUser =>
-                this.updateUsers()
+    editEntity(entity: E) {
+        return this.editEntitiesFn(entity)
+            .subscribe(updatedEntity =>
+                this._store.update((entity as any).id, updatedEntity)
             )
     }
 
     deleteEntity(id: number) {
         return this.deleteEntitiesFn(id)
-            .subscribe(deletedUser =>
-                this.updateUsers()
-            )
+            .subscribe(_ => {
+                this._store.updateTotalLength(this._query.getValue().total - 1);
+                this._store.remove(id);
+              })
     }
 
     updatePageParams(index: number, size: number) {
@@ -47,7 +49,7 @@ export class BaseTableService<S extends BaseTableStore<any, any> = any, Q extend
     }
 
     reset() {
-        // this._store.resetState();
+        this._store.reset();
     }
 
     private updateUsers() {

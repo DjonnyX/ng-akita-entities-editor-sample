@@ -1,58 +1,30 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
-import { CountriesStore } from './countries.store';
+import IUser from '../../models/user.model';
+import { BaseTableService } from 'src/app/states/base-table.service';
 import { CountriesQuery } from './countries.query';
-import ICountry from 'src/app/models/country.model';
+import { CountriesStore } from './countries.store';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CountriesService {
+export class CountriesService extends BaseTableService<CountriesStore, CountriesQuery, IUser> {
 
-  constructor(private _apiService: ApiService, private _countriesStore: CountriesStore,
-    private _countriesQuery: CountriesQuery) { }
+  constructor(private _apiService: ApiService, _countriesStore: CountriesStore,
+    _countriesQuery: CountriesQuery) {
+      super(_countriesStore, _countriesQuery);
+    }
 
-  getCountries(index: number, limit: number) {
-    return this._apiService.getCountries({ paging: { page: index + 1, limit: limit } })
-      .subscribe(data => {
-        this._countriesStore.set(data.items);
-        this._countriesStore.updateTotalLength(data.total);
-      })
-  }
-
-  addCountry(country: ICountry) {
-    return this._apiService.createCountry(country)
-      .subscribe(addedCountry => {
-        this._countriesStore.updateTotalLength(this._countriesQuery.getValue().total + 1);
-        this._countriesStore.add(addedCountry);
-      })
-  }
-
-  editCountry(country: ICountry) {
-    return this._apiService.updateCountry(country)
-      .subscribe(updatedCountry =>
-        this._countriesStore.update(country.id, updatedCountry)
-      )
-  }
-
-  deleteCountry(id: number) {
-    return this._apiService.deleteCountry(id)
-      .subscribe(_ => {
-        this._countriesStore.updateTotalLength(this._countriesQuery.getValue().total - 1);
-        this._countriesStore.remove(id);
-      })
-  }
-
-  updatePageParams(index: number, size: number) {
-    this._countriesStore.updatePageParams(index, size);
-    this.updateCountries();
-  }
-
-  reset() {
-    this._countriesStore.reset();
-  }
-
-  private updateCountries() {
-    return this.getCountries(this._countriesQuery.getValue().pageIndex, this._countriesQuery.getValue().pageSize);
-  }
+    getEntitiesFn(...params) {
+      return this._apiService.getCountries(params[0])
+    }
+    addEntitiesFn(...params) {
+      return this._apiService.createCountry(params[0])
+    }
+    editEntitiesFn(...params) {
+      return this._apiService.updateCountry(params[0])
+    }
+    deleteEntitiesFn(...params) {
+      return this._apiService.deleteCountry(params[0])
+    }
 }

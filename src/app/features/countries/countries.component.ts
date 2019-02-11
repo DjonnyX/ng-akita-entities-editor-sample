@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import ICountry from '../../models/country.model';
 import { CountriesQuery } from './countries.query';
 import { CountriesService } from './countries.service';
+import { IColumnData } from '../entity-table-editor/entity-table-editor.component';
 
-const TABLE_COLUMNS = [
+const TABLE_COLUMNS: Array<IColumnData> = [
   // { id: 'id', name: 'id' },
   { id: 'name', name: 'Имя' },
-  { id: 'service' }
+  { id: 'service', isService: true }
 ];
 
 const LOCALIZATION = {
@@ -30,15 +31,21 @@ const LOCALIZATION = {
   }
 };
 
+const PAGE_SIZE_OPTIONS = [5, 10, 20];
+
 @Component({
   selector: 'app-countries',
   templateUrl: './countries.component.html',
-  styleUrls: ['./countries.component.scss']
+  styleUrls: ['./countries.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CountriesComponent implements OnInit, OnDestroy {
 
   localization = LOCALIZATION;
+
   tableColumns = TABLE_COLUMNS;
+  
+  pageSizeOptions = PAGE_SIZE_OPTIONS;
 
   /**
    * Общее количесво элементов в db
@@ -66,15 +73,15 @@ export class CountriesComponent implements OnInit, OnDestroy {
   }
 
   addCountry(country: ICountry) {
-    this._countriesServices.addCountry(country);
+    this._countriesServices.addEntity(country);
   }
 
   editCountry(country: ICountry) {
-    this._countriesServices.editCountry(country);
+    this._countriesServices.editEntity(country);
   }
 
   deleteCountry(id: number) {
-    this._countriesServices.deleteCountry(id);
+    this._countriesServices.deleteEntity(id);
   }
 
   ngOnDestroy() {

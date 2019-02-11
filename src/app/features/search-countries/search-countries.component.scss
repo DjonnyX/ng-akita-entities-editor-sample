@@ -1,21 +1,25 @@
 @import '../../theme';
 
-.search-form {
-  width: 100%;
-  padding: 0 $m-offset $s-offset;
-  box-sizing: border-box;
-  background-color: $prim-substrate;
+.container {
+  padding: $l-offset;
 
-  .footer {
-    display: flex;
-    justify-content: flex-end;
-  }
+  .search-form {
+    width: 100%;
+    padding: 0 $m-offset $s-offset;
+    box-sizing: border-box;
+    background-color: $prim-substrate;
 
-  .filter-group {
-    padding: $m-offset 0 0;
-  }
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+    }
 
-  .filter-group.lt-md {
+    .filter-group {
+      padding: $m-offset 0 0;
+    }
+
+    .filter-group.lt-md {
       padding: 0;
+    }
   }
 }

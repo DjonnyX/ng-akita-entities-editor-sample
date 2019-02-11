@@ -5,3 +5,9 @@ export default interface IUserCountry {
     visited?: boolean;
     hasVisa?: boolean;
 }
+
+export interface IEditableUserCountry extends IUserCountry {
+    _countryName?: string;
+    _visited?: boolean;
+    _hasVisa?: boolean;
+}

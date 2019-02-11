@@ -1,1 +1,7 @@
 @import '../../theme';
+
+.footer {
+    margin: 0 $l-offset $l-offset;
+    display: flex;
+    justify-content: flex-end;
+}

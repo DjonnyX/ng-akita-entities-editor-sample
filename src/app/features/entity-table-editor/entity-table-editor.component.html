@@ -18,29 +18,29 @@
       <ng-container matColumnDef="service" stickyEnd>
         <th mat-header-cell *matHeaderCellDef></th>
         <td class="col-service" ngClass.xs="xs" ngClass.sm="sm" mat-cell *matCellDef="let element">
-          <!--<ng-container *ngIf="isMobile">-->
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon class="b800 s18">more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="edit(element)">
-              <mat-icon>edit</mat-icon>
-              <span>{{localization.buttonEdit}}</span>
+          <ng-container *ngIf="isMobile$ | async; else elseLargeDisplay">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon class="b800 s18">more_vert</mat-icon>
             </button>
-            <button mat-menu-item (click)="delete(element)">
-              <mat-icon>delete</mat-icon>
-              <span>{{localization.buttonDelete}}</span>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="edit(element)">
+                <mat-icon>edit</mat-icon>
+                <span>{{localization.buttonEdit}}</span>
+              </button>
+              <button mat-menu-item (click)="delete(element)">
+                <mat-icon>delete</mat-icon>
+                <span>{{localization.buttonDelete}}</span>
+              </button>
+            </mat-menu>
+          </ng-container>
+          <ng-template #elseLargeDisplay>
+            <button mat-icon-button (click)="edit(element)">
+              <mat-icon class="b500 s18">edit</mat-icon>
             </button>
-          </mat-menu>
-          <!--</ng-container>
-        <ng-container *ngIf="!isMobile;">
-          <button mat-icon-button (click)="edit(element)">
-            <mat-icon class="b500 s18">edit</mat-icon>
-          </button>
-          <button mat-icon-button (click)="delete(element)">
-            <mat-icon class="b500 s18">delete</mat-icon>
-          </button>
-        </ng-container>-->
+            <button mat-icon-button (click)="delete(element)">
+              <mat-icon class="b500 s18">delete</mat-icon>
+            </button>
+          </ng-template>
         </td>
       </ng-container>
 
@@ -48,6 +48,6 @@
       <tr mat-row *matRowDef="let row; columns: columnIds;"></tr>
     </table>
 
-    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons [length]="totalItems" (page)="changePage($event)"></mat-paginator>
+    <mat-paginator #paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons [length]="totalItems" (page)="changePage($event)"></mat-paginator>
   </div>
 </div>

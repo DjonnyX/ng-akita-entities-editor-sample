@@ -1,27 +1,39 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import IUserCountry from '../../models/user-country.model';
+import IUserCountry, { IEditableUserCountry } from '../../models/user-country.model';
 import { UserCountriesQuery } from './user-countries.query';
 import { UserCountriesService, ISearchData } from './user-countries.service';
+import { ColumnTypes, IColumnData } from './user-countries-table/user-countries-table.component';
 
-const TABLE_COLUMNS = [
-  { id: 'countryName', name: 'Страна' },
-  { id: 'visited', name: 'Посещенность' },
-  { id: 'hasVisa', name: 'Наличие визы' }
+const BUTTON_SAVE_LABEL = 'Применить и сохранить'
+
+const TABLE_COLUMNS: Array<IColumnData> = [
+  { id: '_countryName', name: 'Страна', type: ColumnTypes.TEXT },
+  { id: '_visited', name: 'Посещенность', type: ColumnTypes.SWITCH },
+  { id: '_hasVisa', name: 'Наличие визы', type: ColumnTypes.SWITCH }
 ];
+
+const PAGE_SIZE_OPTIONS = [5, 10, 20];
 
 @Component({
   selector: 'app-user-countries',
   templateUrl: './user-countries.component.html',
-  styleUrls: ['./user-countries.component.scss']
+  styleUrls: ['./user-countries.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserCountriesComponent implements OnInit, OnDestroy {
 
   tableColumns = TABLE_COLUMNS;
+
+  pageSizeOptions = PAGE_SIZE_OPTIONS;
+
+  buttonSaveLabel = BUTTON_SAVE_LABEL;
+
   /**
    * Коллекция в сторе
    */
   collection$: Observable<Array<IUserCountry>>;
+
   /**
    * Состояние загрузки
    */
@@ -39,6 +51,16 @@ export class UserCountriesComponent implements OnInit, OnDestroy {
 
   search(data: ISearchData) {
     this._userCountriesService.getUserCountries(data);
+  }
+
+  save() {
+    this._userCountriesService.save().subscribe(v => {
+      console.log('Изменения сохранены');
+    })
+  }
+
+  changeEntity(entity: IEditableUserCountry) {
+    this._userCountriesService.updateEntity(entity);
   }
 
   ngOnDestroy() {

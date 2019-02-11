@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
-import { map, catchError, combineAll } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { map, catchError, combineAll, switchMap, filter, mergeMap } from 'rxjs/operators';
+import { of, from, iif } from 'rxjs';
 import IUser from '../../models/user.model';
 import ICountry from '../../models/country.model';
-import IUserCountry from '../../models/user-country.model';
+import IUserCountry, { IEditableUserCountry } from '../../models/user-country.model';
 import { UserCountriesStore } from './user-countries.store';
+import { UserCountriesQuery } from './user-countries.query';
 
 export interface ISearchData {
   user: IUser;
@@ -38,7 +39,45 @@ function normalizeCFilter(filter: ISearchData) {
 })
 export class UserCountriesService {
 
-  constructor(private _apiService: ApiService, private _store: UserCountriesStore) { }
+  constructor(private _apiService: ApiService, private _store: UserCountriesStore, private _query: UserCountriesQuery) { }
+
+  updateEntity(entity: IEditableUserCountry) {
+    this._store.update(entity.id, entity);
+  }
+
+  createUserCountry(data: IUserCountry) {
+    return this._apiService.createUserCountry(data)
+  }
+
+  updateUserCountry(data: IUserCountry) {
+    return this._apiService.updateUserCountry(data);
+  }
+
+  save() {
+    return from(this._query.getAll()).pipe(
+      filter(e => e._visited !== e.visited || e._hasVisa !== e.hasVisa),
+      mergeMap(
+        (uc: IEditableUserCountry) =>
+          iif(() => uc.id < 0,
+            // создание
+            of(uc).pipe(
+              map(e => createEntityFrom(e, false)),
+              switchMap(e => this.createUserCountry(e)),
+              map(e => {
+                this._store.add({ ...uc, ...e })
+                this._store.remove(uc.id);
+              })
+            ),
+            // редактирование
+            of(uc).pipe(
+              map(e => createEntityFrom(e)),
+              switchMap(e => this.updateUserCountry(e)),
+              map(e => this._store.update(uc.id, { ...uc, e }))
+            )
+          )
+      )
+    )
+  }
 
   getUserCountries(filterData: ISearchData) {
     const ucFilter = normalizeUcFilter(filterData);
@@ -53,11 +92,11 @@ export class UserCountriesService {
       catchError(err => of([] as Array<IUserCountry>))
     );
 
-    return of(countries, userCountries)
+    return of(countries, userCountries, of(filterData.user.id))
       .pipe(
         combineAll()
-      ).subscribe(([c, uc]) => {
-        const collection = normalize(c as ICountry[], uc as IUserCountry[]);
+      ).subscribe(([c, uc, userId]) => {
+        const collection = normalize(c as ICountry[], uc as IUserCountry[], userId as number);
         this._store.set(collection);
         this._store.updateFetchedCollection(true);
       })
@@ -72,21 +111,44 @@ export class UserCountriesService {
   }
 }
 
-function normalize(c: ICountry[], uc: IUserCountry[]): IUserCountry[] {
-  const mapC = c.map(v => v.id);
-  const mapUc = uc.map(v => v.id);
-  if (!mapC) null;
+function normalize(c: ICountry[], uc: IUserCountry[], userId: number): IEditableUserCountry[] {
+  const mapUc = uc.map(v => v.countryId);
 
   let tmpId = Number.MIN_SAFE_INTEGER;
 
-  return mapC.map((id, i) => {
-    const ucIndex = mapUc.indexOf(id);
-    return (ucIndex === -1 ? {
-      id: ++tmpId, // id < 0 будет означать, что запись в db не создана
-      countryId: c[i].id,
-      countryName: c[i].name,
-      visited: false,
-      hasVisa: false
-    } : uc[ucIndex]) as IUserCountry;
+  return c.map((country, i) => {
+    const ucIndex = mapUc.indexOf(country.id);
+    if (ucIndex === -1) {
+      return {
+        id: ++tmpId, // id < 0 будет означать, что запись в db не создана
+        userId: userId,
+        countryId: c[i].id,
+        _countryName: c[i].name,
+        _visited: false, // Это служебное поле, которое будет изменяться контролами,
+        // далее значение будет сравниваться с "visited" и если они не равны,
+        // то этот элемент будет помечен для сохранения
+        visited: false,
+        _hasVisa: false, // Это служебное поле, которое будет изменяться контролами,
+        // далее значение будет сравниваться с "hasVisa" и если они не равны,
+        // то этот элемент будет помечен для сохранения
+        hasVisa: false
+      }
+    }
+    const original = uc[ucIndex] as IEditableUserCountry;
+    original['_countryName'] = c[i].name;
+    original['_visited'] = original.visited;
+    original['_hasVisa'] = original.hasVisa;
+    return original;
   })
+}
+
+function createEntityFrom(source: any, includeId: boolean = true): IUserCountry {
+  const data: any = {
+    userId: source.userId,
+    countryId: source.countryId,
+    visited: source._visited,
+    hasVisa: source._hasVisa
+  }
+  if (includeId) data.id = source.id;
+  return data;
 }

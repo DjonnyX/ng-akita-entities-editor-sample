@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UsersQuery } from './users.query';
 import { UsersService } from './users.service';
 import IUser from '../../models/user.model';
+import { IColumnData } from '../entity-table-editor/entity-table-editor.component';
 
-const TABLE_COLUMNS = [
+const TABLE_COLUMNS: Array<IColumnData> = [
   // { id: 'id', name: 'id' },
   { id: 'name', name: 'Имя' },
-  { id: 'service' }
+  { id: 'service', isService: true }
 ];
 
 const LOCALIZATION = {
@@ -30,24 +31,32 @@ const LOCALIZATION = {
   }
 };
 
+const PAGE_SIZE_OPTIONS = [5, 10, 20];
+
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  styleUrls: ['./users.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnInit, OnDestroy {
 
   localization = LOCALIZATION;
+
   tableColumns = TABLE_COLUMNS;
+  
+  pageSizeOptions = PAGE_SIZE_OPTIONS;
 
   /**
    * Общее количесво элементов в db
    */
   totalLength$: Observable<number>;
+  
   /**
    * Коллекция в сторе
    */
   collection$: Observable<Array<IUser>>;
+  
   /**
    * Состояние загрузки
    */
@@ -66,15 +75,15 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   addUser(user: IUser) {
-    this._usersServices.addUser(user);
+    this._usersServices.addEntity(user);
   }
 
   editUser(user: IUser) {
-    this._usersServices.editUser(user);
+    this._usersServices.editEntity(user);
   }
 
   deleteUser(id: number) {
-    this._usersServices.deleteUser(id);
+    this._usersServices.deleteEntity(id);
   }
 
   ngOnDestroy() {

@@ -2,13 +2,8 @@ import * as jsonServer from 'json-server';
 import db from "./db";
 
 const server = jsonServer.create();
-const router = jsonServer.router(db, {
-    foreignKeySuffix: 'id'
-});
-const middlewares = jsonServer.defaults({
-    logger: true,
-
-});
+const router = jsonServer.router(db);
+const middlewares = jsonServer.defaults();
 
 server.use(middlewares);
 server.use('/api/', router);

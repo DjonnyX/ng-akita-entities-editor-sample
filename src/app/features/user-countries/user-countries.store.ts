@@ -1,8 +1,8 @@
 import { EntityState, StoreConfig, EntityStore } from "@datorama/akita";
 import { Injectable } from '@angular/core';
-import IUserCountry from '../../models/user-country.model';
+import IUserCountry, { IEditableUserCountry } from '../../models/user-country.model';
 
-export interface UserCountriesState extends EntityState<IUserCountry> {
+export interface UserCountriesState extends EntityState<IEditableUserCountry> {
     pageIndex: number;
     pageSize: number;
     total: number;
@@ -20,7 +20,7 @@ const initialState: UserCountriesState = {
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'user_countries', resettable: true })
-export class UserCountriesStore extends EntityStore<UserCountriesState, IUserCountry> {
+export class UserCountriesStore extends EntityStore<UserCountriesState, IEditableUserCountry> {
 
     constructor() {
         super(initialState);

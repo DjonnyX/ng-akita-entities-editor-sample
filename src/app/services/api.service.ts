@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { ID } from '@datorama/akita';
 import IUser from '../models/user.model';
 import ICountry from '../models/country.model';
 import IUserCountry from '../models/user-country.model';
@@ -72,7 +73,7 @@ export class ApiService {
       )
     )
   }
-  
+
   /**
    * Получение списка пользователей с заданными параметрами фильтрации
    */
@@ -97,7 +98,7 @@ export class ApiService {
   /**
    * Удаление пользователя
    */
-  deleteUser(id: number) {
+  deleteUser(id: ID) {
     return this._http.delete<IUser>(`${ApiRoutes.USERS}/${id}`);
   }
 
@@ -125,7 +126,7 @@ export class ApiService {
   /**
    * Удаление города
    */
-  deleteCountry(id: number) {
+  deleteCountry(id: ID) {
     return this._http.delete<ICountry>(`${ApiRoutes.COUNTRIES}/${id}`);
   }
 
@@ -153,7 +154,7 @@ export class ApiService {
   /**
    * Удаление города пользователя
    */
-  deleteUserCountry(id: number) {
+  deleteUserCountry(id: ID) {
     return this._http.delete<IUserCountry>(`${ApiRoutes.USER_COUNTRIES}/${id}`);
   }
 }

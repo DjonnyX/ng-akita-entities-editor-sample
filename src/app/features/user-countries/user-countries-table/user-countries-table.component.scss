@@ -1,0 +1,15 @@
+@import '../../../theme';
+
+.container {
+  padding: $l-offset;
+
+  .mat-table {
+    width: 100%;
+    background-color: $prim-substrate;
+
+    .mat-column-visited,
+    .mat-column-hasVisa {
+      width: 20%;
+    }
+  }
+}

@@ -1,6 +1,12 @@
 <app-search-countries (search)="search($event)"></app-search-countries>
 
 <ng-container *ngIf="fetchedCollection$ | async">
-  <app-entity-table-editor [totalItems]="totalLength$ | async" [collection]="collection$ | async" [columns]="tableColumns"
-    [localization]="localization"></app-entity-table-editor>
+  <app-user-countries-table (change)="changeEntity($event)" [pageSizeOptions]="pageSizeOptions" [totalItems]="totalLength$ | async"
+    [collection]="collection$ | async" [columns]="tableColumns"></app-user-countries-table>
+
+    <div class="footer">
+      <button mat-raised-button class="btn-save" (click)="save()">
+        {{buttonSaveLabel}}
+      </button>
+    </div>
 </ng-container>

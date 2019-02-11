@@ -3,7 +3,7 @@ import { MediaObserver } from '@angular/flex-layout';
 import { MatSidenav } from '@angular/material';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { filter, last, map, takeLast, tap, debounce, debounceTime } from 'rxjs/operators';
+import { filter, map, debounceTime } from 'rxjs/operators';
 import { NavMenuQuery } from './nav-menu.query';
 import { NavMenuService } from './nav-menu.service';
 
@@ -26,11 +26,19 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   private _subscriptionSidenavStatus: Subscription;
-  private _subscriptionRouteChange: Subscription;
 
+  private _subscriptionRouteChange: Subscription;
+  
+  private _subscriptionIsMobile: Subscription;
+
+  isMobile$: Observable<boolean>;
+  
   currentRouteName$: Observable<string>;
+  
   sidenavOpen$: Observable<boolean>;
+  
   sidenavHasBackdrop$: Observable<boolean>;
+  
   roteCollection$: Observable<Array<INavRoute>>;
 
   constructor(private _media: MediaObserver, private _navMenuQuery: NavMenuQuery,
@@ -43,19 +51,16 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     this.roteCollection$ = this._navMenuQuery.roteCollection$;
 
     // Подписка на изменение медиа-состояния
-    this._media.media$.
-    pipe(tap())
-    .subscribe(mChange => {
-      const isMobile = mChange.suffix === 'Xs' || mChange.suffix === 'Sm';
-      this._navMenuService.setHasBackdrop(isMobile);
-    })
+    this.isMobile$ = this._media.media$.pipe(
+      map(v => v.suffix === 'Xs' || v.suffix === 'Sm')
+    )
+
+    this._subscriptionIsMobile = this.isMobile$.subscribe(v => this._navMenuService.setHasBackdrop(v));
 
     // Открывает/закрывает панель навигации
-    this._subscriptionSidenavStatus = this.sidenavOpen$.
-    pipe(
+    this._subscriptionSidenavStatus = this.sidenavOpen$.pipe(
       debounceTime(100)
-    )
-    .subscribe(val => {
+    ).subscribe(val => {
       if (val) return this._sidenav.open();
       this._sidenav.close();
     })
@@ -68,10 +73,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       )
       .subscribe(url =>
         this.roteCollection$.pipe(
-          tap(),
-          map(routes => routes.find(route => {
-            return `/${route.route}` === url;
-          }))
+          map(routes => routes.find(route => `/${route.route}` === url))
         ).subscribe(route => {
           this._navMenuService.setCurrentRoute(route);
         })
@@ -97,5 +99,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._subscriptionSidenavStatus.unsubscribe();
     this._subscriptionRouteChange.unsubscribe();
+    this._subscriptionIsMobile.unsubscribe();
   }
 }

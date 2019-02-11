@@ -4,14 +4,12 @@ export interface BaseTableState<E = any> extends EntityState<E> {
     pageIndex: number;
     pageSize: number;
     total: number;
-    hasEntity: boolean;
 }
 
 const initialState: BaseTableState = {
     pageIndex: 0,
     pageSize: 0,
     total: 0,
-    hasEntity: false
 }
 
 /**
@@ -19,7 +17,7 @@ const initialState: BaseTableState = {
  */
 export class BaseTableStore<S extends BaseTableState<E> = any, E = any> extends EntityStore<S, E> {
 
-    constructor(initialState: S) {
+    constructor() {
         super(initialState);
     }
     
@@ -29,13 +27,5 @@ export class BaseTableStore<S extends BaseTableState<E> = any, E = any> extends 
 
     updatePageParams(index: number, size: number) {
         this.updateRoot({pageIndex: index, pageSize: size} as any);
-    }
-
-    updateHasUser(status: boolean) {
-        this.updateRoot({hasEntity: status} as any);
-    }
-
-    resetState() {
-        this.set(initialState)
     }
 }
