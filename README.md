@@ -1,4 +1,4 @@
-# UtsTest
+# ng-akita-entities-editor-sample
 
 ## Development server with mock-server
 

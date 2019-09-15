@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "UtsTest": {
+    "ng-akita-entities-editor-sample": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/UtsTest",
+            "outputPath": "dist/ng-akita-entities-editor-sample",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -62,18 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "UtsTest:build"
+            "browserTarget": "ng-akita-entities-editor-sample:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "UtsTest:build:production"
+              "browserTarget": "ng-akita-entities-editor-sample:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "UtsTest:build"
+            "browserTarget": "ng-akita-entities-editor-sample:build"
           }
         },
         "test": {
@@ -107,7 +107,7 @@
         }
       }
     },
-    "UtsTest-e2e": {
+    "ng-akita-entities-editor-sample-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -116,11 +116,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "UtsTest:serve"
+            "devServerTarget": "ng-akita-entities-editor-sample:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "UtsTest:serve:production"
+              "devServerTarget": "ng-akita-entities-editor-sample:serve:production"
             }
           }
         },
@@ -136,5 +136,5 @@
       }
     }
   },
-  "defaultProject": "UtsTest"
+  "defaultProject": "ng-akita-entities-editor-sample"
 }

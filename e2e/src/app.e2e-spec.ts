@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to UtsTest!');
+    expect(page.getTitleText()).toEqual('Welcome to ng-akita-entities-editor-sample!');
   });
 
   afterEach(async () => {

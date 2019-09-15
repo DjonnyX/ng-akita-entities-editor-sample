@@ -1,6 +1,9 @@
 {
-  "name": "uts-test",
-  "author": "Eugene Grebennikov",
+  "name": "ng-akita-entities-editor-sample",
+  "author": {
+    "name": "Eugene Grebennikov",
+    "email": "djonnyx@gmail.com"
+  },
   "version": "0.0.2",
   "scripts": {
     "ng": "ng",
